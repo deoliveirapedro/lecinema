@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Cinéma</title>
+    
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Paleta de Cores e Estilo Geral (Vibe Pessoal + Estética MUBI) --- */
+        :root {
+            --background-color: #F4F1E9; /* Papel antigo */
+            --text-color: #2C3E2A; /* Verde musgo escuro */
+            --primary-color: #556B2F; /* Verde musgo principal */
+            --card-background: #FFFFFF;
+            --shadow-color: rgba(44, 62, 42, 0.1);
+            --font-serif: 'Lora', serif;
+            --font-sans: 'Roboto', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* --- Cabeçalho Minimalista --- */
+        header {
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: var(--font-serif);
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- Filme em Destaque (Estilo MUBI) --- */
+        #hero-view {
+            margin-bottom: 4rem;
+            cursor: pointer;
+        }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            min-height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .hero-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 10%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+        }
+
+        .hero-content h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+            max-width: 60ch;
+            font-weight: 300;
+        }
+
+        /* --- Galeria de Filmes --- */
+        #gallery-view h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(44, 62, 42, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem 1.5rem;
+        }
+
+        .movie-card {
+            background-color: transparent;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.03);
+        }
+
+        .movie-card img {
+            width: 100%;
+            /* CORREÇÃO: 'height: auto' mantém a proporção da imagem, evitando cortes. */
+            height: auto;
+            display: block;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .movie-card h3 {
+            font-family: var(--font-sans);
+            font-weight: 400;
+            font-size: 1rem;
+            margin-top: 0.75rem;
+            text-align: center;
+        }
+
+        /* --- Player de Vídeo --- */
+        #player-view {
+            display: none;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-info {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .video-info h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--text-color);
+        }
+
+        .video-info p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 0.5rem;
+            max-width: 70ch;
+        }
+
+        .back-button {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 12px 24px;
+            border: 1px solid var(--primary-color);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-bottom: 2.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        /* --- Rodapé --- */
+        footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(44, 62, 42, 0.2);
+            color: #888;
+            font-family: var(--font-serif);
+        }
+
+        /* --- Media Queries para Responsividade --- */
+        @media (max-width: 768px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            .video-info h2 {
+                font-size: 2rem;
+            }
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1.5rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .hero-container {
+                height: 40vh;
+                min-height: 280px;
+            }
+            .hero-content h2 {
+                font-size: 1.8rem;
+            }
+            .hero-content p {
+                font-size: 0.9rem;
+                max-width: 90%;
+            }
+            .movie-grid {
+                /* Garante 2 colunas em telas muito pequenas para melhor visualização */
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Le Cinéma</h1>
+    </header>
+
+    <main class="container">
+        
+        <section id="hero-view">
+            <!-- O filme em destaque será inserido aqui pelo JavaScript -->
+        </section>
+
+        <section id="gallery-view">
+            <h2>Catalogue</h2>
+            <div id="movie-grid" class="movie-grid">
+                <!-- Os cards dos filmes serão inseridos aqui pelo JavaScript -->
+            </div>
+        </section>
+
+        <section id="player-view">
+            <button id="back-to-gallery" class="back-button">Retour au Catalogue</button>
+            <div class="video-container">
+                <video id="video-player" controls autoplay></video>
+            </div>
+            <div class="video-info">
+                <h2 id="video-title"></h2>
+                <p id="video-description"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Votre refuge cinématographique.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elementos do DOM ---
+            const heroView = document.getElementById('hero-view');
+            const galleryView = document.getElementById('gallery-view');
+            const playerView = document.getElementById('player-view');
+            const movieGrid = document.getElementById('movie-grid');
+            const videoPlayer = document.getElementById('video-player');
+            const videoTitle = document.getElementById('video-title');
+            const videoDescription = document.getElementById('video-description');
+            const backToGalleryBtn = document.getElementById('back-to-gallery');
+
+            // --- Lista de Filmes ---
+            // Para adicionar mais filmes, copie e cole um novo bloco de código aqui dentro dos colchetes [].
+            const allMovies = [
+              {
+                "title": "Vampyros Lesbos (1971)",
+                "description": "Linda est une jeune avocate américaine travaillant dans un cabinet d'avocats à Istanbul. La nuit, elle fait des rêves passionnés dans lesquels une brune sexy la harcèle et lui fait l'amour, sans pouvoir se défendre.",
+                "poster": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/41057-vampyros-lesbos-0-1000-0-1500-crop.jpg?alt=media&token=dfcde77b-355d-48cb-9f63-38d13636f705",
+                "videoUrl": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/Vampyros.Lesbos.1971.720p.BluRay.x264.AAC-%5BYTS.MX%5D.mp4?alt=media&token=00b6f27c-db08-417d-9fcd-fdb11802f03e"
+              },
+              {
+              "title": "The Darjeeling Limited (2007)",
+              "description": "Avec l'intention de se retrouver et de tisser des liens, trois frères séparés se lancent dans un voyage en train à travers l'Inde, une quête d'introspection. Leur voyage spirituel et familial dévie rapidement et de manière hilarante.",
+              "poster": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/49268-the-darjeeling-limited-0-1000-0-1500-crop.jpg?alt=media&token=f5a07ed2-a68b-4d58-aa4c-1109321f6c00",
+              "videoUrl": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/ViagemDarjeeling.mp4?alt=media&token=80fcc1db-fb23-437e-aae9-4a2c82c80e19"
+              }
+            ];
+
+            // --- Funções da Aplicação ---
+
+            // Função que inicia tudo
+            function initializeApp() {
+                if (allMovies && allMovies.length > 0) {
+                    displayHero(allMovies[0]);
+                    displayMovies(allMovies);
+                } else {
+                    galleryView.innerHTML = `<p style="color: #555;">Aucun film à afficher.</p>`;
+                }
+            }
+            
+            // Função para mostrar o filme em destaque
+            function displayHero(movie) {
+                heroView.innerHTML = `
+                    <div class="hero-container" style="background-image: url('${movie.poster}')">
+                        <div class="hero-content">
+                            <h2>${movie.title}</h2>
+                            <p>${movie.description}</p>
+                        </div>
+                    </div>
+                `;
+                heroView.addEventListener('click', () => showPlayer(movie));
+            }
+
+            // Função para mostrar a galeria de filmes
+            function displayMovies(movies) {
+                movieGrid.innerHTML = '';
+                movies.forEach(movie => {
+                    const card = document.createElement('div');
+                    card.className = 'movie-card';
+                    card.innerHTML = `
+                        <img src="${movie.poster}" alt="Affiche de ${movie.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x600/F4F1E9/2C3E2A?text=Affiche';">
+                        <h3>${movie.title}</h3>
+                    `;
+                    card.addEventListener('click', () => showPlayer(movie));
+                    movieGrid.appendChild(card);
+                });
+            }
+
+            // Função para mostrar o player de vídeo
+            function showPlayer(movieData) {
+                heroView.style.display = 'none';
+                galleryView.style.display = 'none';
+                playerView.style.display = 'block';
+
+                videoTitle.textContent = movieData.title;
+                videoDescription.textContent = movieData.description;
+                videoPlayer.src = movieData.videoUrl;
+                
+                window.scrollTo(0, 0);
+            }
+
+            // Função para voltar para a galeria
+            function showGallery() {
+                playerView.style.display = 'none';
+                heroView.style.display = 'block';
+                galleryView.style.display = 'block';
+                
+                videoPlayer.pause();
+                videoPlayer.src = '';
+            }
+
+            // --- Event Listeners ---
+            backToGalleryBtn.addEventListener('click', showGallery);
+
+            // Inicia a aplicação
+            initializeApp();
+        });
+    </script>
+</body>
+</html>

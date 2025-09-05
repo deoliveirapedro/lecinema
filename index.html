@@ -286,7 +286,7 @@
                 "description": "Deux amis compétitifs, nourris par des aspirations littéraires et l'exubérance de la jeunesse...",
                 "poster": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/Reprise%20(2006)%2F44710-reprise-0-2000-0-3000-crop.jpg?alt=media&token=60928198-07c9-47cd-a8bb-ed863f4a3de3",
                 "videoUrl": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/Reprise%20(2006)%2FReprise.2006.1080p.BluRay.x264.AAC5.1-%5BYTS.MX%5D.mp4?alt=media&token=048985f9-89d2-4b07-ac68-18037954f30a",
-                "subtitleUrl": "https://gist.githubusercontent.com/gemini-codelab/3c9397984c7a523a54a72d1f7d4e514f/raw/e35d3d4b14d8e52a48b30f81d5823565e61f2f81/test-subtitles.vtt"
+                "subtitleUrl": "https://firebasestorage.googleapis.com/v0/b/le-cinema-2e808.firebasestorage.app/o/Reprise%20(2006)%2F%5BSubtitleTools.com%5D%20Reprise.2006.1080p.BluRay.x264.AAC5.vtt?alt=media&token=be296e61-e1c5-466a-8ccb-0aa45621ab8a"
               }
             ];
             
@@ -323,7 +323,7 @@
                     const card = document.createElement('div');
                     card.className = 'movie-card';
                     card.innerHTML = `
-                        <img src="${movie.poster}" alt="Affiche de ${movie.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x600/F4F1E9/2C3E2A?text=Affiche';">
+                        <img src="${movie.poster}" alt="Affiche de ${movie.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x600/F4F1E9/2C3A2A?text=Affiche';">
                         <h3>${movie.title}</h3>
                     `;
                     card.addEventListener('click', () => showPlayer(movie));
@@ -341,15 +341,16 @@
                 
                 // Limpa legendas antigas
                 const existingTracks = player.remoteTextTracks();
-                while (existingTracks.length > 0) {
-                    player.removeRemoteTextTrack(existingTracks[0]);
+                let i = existingTracks.length;
+                while (i--) {
+                    player.removeRemoteTextTrack(existingTracks[i]);
                 }
 
                 // Define a nova fonte de vídeo
                 player.src({ src: movieData.videoUrl, type: 'video/mp4' });
 
-                // Adiciona a nova legenda, se existir
-                if (movieData.subtitleUrl) {
+                // Adiciona a nova legenda, se existir e o link não for um placeholder
+                if (movieData.subtitleUrl && !movieData.subtitleUrl.includes('URL_DA_SUA_LEGENDA')) {
                     player.addRemoteTextTrack({
                         kind: 'subtitles',
                         src: movieData.subtitleUrl,
